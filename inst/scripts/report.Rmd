@@ -1,0 +1,117 @@
+# Deconvolution report
+
+__Started on__
+
+```{r start, echo=FALSE}
+timestamp()
+.START <- Sys.time()
+``` 
+
+# Initalisation
+```{r setup, include=FALSE}
+library(knitr)
+hook2 <- function(x){ gsub("```\n+```\n", "", x) }
+knit_hooks$set(document = hook2)
+```
+
+```{r load_lib}
+library(CellMix, quietly = TRUE)
+```
+
+# Data
+
+Type: ``{r} class(eset)``
+```{r, data_show}
+eset
+```
+
+## Identify annotation package
+The process stops if the GPL cannot be mapped to a Bioconductor annotation package.
+```{r annotation, echo=2}
+ann <- annotation(eset)
+annotation(eset) <- biocannotation(eset)
+if( annotation(eset) == '' ){
+	stop("Could not map platform '", ann, "' to a Bioconductor annotation package")
+}
+```
+
+## Overview
+
+```{r data_overview, echo=FALSE}
+# expression object
+eset
+# plot densities
+library(affy)
+plotDensity(exprs(eset))
+```
+### Sample groups
+```{r data_summary}
+# disease groups [reorder levels: use NORMAL as baseline]
+groups <- eset$disease
+groups <- relevel(groups, 'NORMAL')
+# show cross tissue
+table(groups, eset$tissue)
+```
+
+# Deconvolution
+
+## Estimate cell proportions
+Method: Abbas signatures + lsfit
+
+```{r deconv_p, eval=FALSE}
+resP <- gedBlood(eset, method='lsfit', verbose = TRUE)
+
+# plot estimated proportions
+propplot(resP)
+```
+
+To avoid sample size issue, we deconvolve at the CBC level:
+```{r asCBC}
+# aggregate as CBC
+resCBC <- asCBC(resP)
+propplot(resCBC)
+```
+
+## Estimate cell-specific expression
+Method: `r args$method`
+
+```{r deconv_cs, eval=FALSE}
+resCS <- ged(eset, coef(resCBC), data = groups, method = args$method, verbose = TRUE, nperms = 10)
+```
+
+## Save result
+
+### R binary files
+```{r results_save}
+save(resP, resCBC, resCS, file=paste0(ACCESSION, '_cs.RData'))
+```
+
+### Database
+```{r results_db}
+# TODO
+```
+
+# Benchmark against known data
+## Proportions
+```{r benchmark_p, eval=FALSE, echo=2:3}
+if( hasCoef(eset) ){
+	# correlations
+	profplot(eset, res)
+}else cat("SKIP: no reference proportions are available.\n")
+```
+
+## Cell-specific signatures
+if( hasBasis(eset) ){
+	# correlations
+	profplot(t(basis(eset)), t(basis(res)))
+	# AUCs
+}else cat("SKIP: no reference cell-specific signatures are available.\n")
+```
+
+__Finished on__
+
+```{r done, echo=FALSE}
+timestamp()
+.END <- Sys.time()
+cat("Total elapsed time - ", capture.output(show(.END - .START)), "\n")
+```

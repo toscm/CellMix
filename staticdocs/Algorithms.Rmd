@@ -1,0 +1,66 @@
+# Algorithms available in CellMix
+
+The *CellMix* package includes several deconvolution algorithms, which differ in term of input and output data.
+The following table helps choosing an appropriate algorithm according to the data available and the desired output.
+
+ 
+
+```{r algo_table, results = 'asis', echo = FALSE}
+suppressMessages({
+library(xtable)
+})
+a <- gedAlgorithmInfo(FALSE)
+h <- capture.output(print(xtable(a, citet = "_REFERENCES.html", type = 'html'), type = 'html', sanitize.text.function=xsanitize("<>#_")))
+
+io_triangles <- c(I = "
+width: 0; height: 0;
+border: 10px solid red;
+border-top-color: red;
+border-left-color: red;"
+            , O = "
+width: 0; height: 0;
+border: 10px solid green;
+border-bottom-color: green;
+border-right-color: green;"
+            , `I/O` = "
+width: 0; height: 0;
+border: 10px solid transparent;
+border-top-color: red;
+border-left-color: red;
+border-bottom-color: green;
+border-right-color: green;"
+        )
+        
+.io_square <- function(type, x = NULL){
+	square <- paste0("<div style=\"float: left;", gsub("\n", "", io_triangles[type]), "\"></div>")
+	if( !length(x) ) square
+	else gsub(paste0(">[ ]*", type, "[ ]*<"), sprintf(">%s<", square), x)
+}
+for( t in names(io_triangles) ){
+	h <- .io_square(t, h)
+}
+cat(h, sep = "\n")
+```
+
+<hr>
+
+<table><tr>
+<td>`r .io_square("I")`&nbsp;Required&nbsp;input&nbsp;</td>
+<td>`r .io_square("O")`&nbsp;Estimated&nbsp;output&nbsp;</td>
+<td>`r .io_square("I/O")`&nbsp;Required&nbsp;input&nbsp;and&nbsp;estimated&nbsp;output</td>
+</tr></table>
+<table>
+<tr><td><strong>Basis</strong></td><td>Cell-specific signatures</td></tr>
+<tr><td><strong>Coef</strong></td><td>Cell proportions</td></tr>
+<tr><td valign="top"><strong>Marker</strong></td><td><em>Input:</em> cell-specific marker list<br />
+<em>Output:</em> cell-specific differential expression (e.g., Case vs. Control)</td></tr>
+</table>
+
+<hr>
+
+# Other algorithms not -- yet -- available in CellMix
+
+  * TEMT: A mixture model for expression deconvolution from RNA-seq in heterogeneous tissues (<a href="_REFERENCES.html#Li2013">Li et al. (2013)</a>)
+  * DeMix: Deconvolution for Mixed Cancer Transcriptomes Using Raw Measured Data (<a href="_REFERENCES.html#Ahn2013">Ahn et al. (2013)</a>)
+  * ISOpure: Computational purification of individual tumor gene expression profiles leads to significant improvements in prognostic prediction (<a href="_REFERENCES.html#Quon2013">Quon et al. (2013)</a>)
+  * Statistical expression deconvolution from mixed tissue samples (<a href="_REFERENCES.html#Clarke2010">Clarker et al. (2010)</a>)
