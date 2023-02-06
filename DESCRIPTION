@@ -1,7 +1,7 @@
 Package: CellMix
 Type: Package
 Title: A Comprehensive Toolbox for Gene Expression Deconvolution
-Version: 1.6.2
+Version: 1.6.3
 Date: 2013-03-31
 Authors@R: c( person("Renaud", "Gaujoux", role=c('aut', 'cre'),
     email='renaud@mancala.cbio.uct.ac.za') , person("Cathal", "Seoighe",
@@ -23,10 +23,11 @@ URL: http://web.cbio.uct.ac.za/~renaud/CRAN/web/CellMix
 BugReports: https://bitbucket.org/renozao/cellmix/issues
 Depends: R (>= 3.0), methods, pkgmaker (>= 0.16), NMF (>= 0.14), csSAM
         (>= 1.2.4), registry, stats, stringr, GSEABase, Biobase
+biocViews:
 Imports: graphics, BiocGenerics, annotate, matrixStats (>= 0.10),
         genefilter, AnnotationDbi, RSQLite, DBI, preprocessCore,
         limSolve, quadprog, corpcor, xtable, gtools, csSAM, beeswarm,
-        graph, BiocInstaller, bibtex, digest, ggplot2, plyr
+        graph, BiocManager, bibtex, digest, ggplot2, plyr
 Suggests: RUnit, lumi, hgu133a.db, hgu133b.db, hgu133plus2.db,
         illuminaHumanv2.db, rat2302.db, hom.Hs.inp.db, GEOmetadb, xlsx,
         GEOquery (>= 2.26.1), ArrayExpress (>= 1.20.0), biomaRt, knitr
@@ -49,4 +50,3 @@ Collate: 'options.R' 'devutils.R' 'utils.R' 'readFile.R' 'DataSource.R'
 BuildVignettes: no
 VignetteBuilder: knitr
 Packaged: 2023-02-06 13:05:54 UTC; tobi
-NeedsCompilation: no

@@ -384,12 +384,11 @@ askUser <- function (msg, allowed = c("y", "n"), idefault = "n", default = "n", 
 #' with \code{\link{require.quiet}} or normally with \code{\link{require}}.
 #' @param prependLF logical that indicates if the message should start at a new line.
 #' @param ptype type of package: from CRAN-like repositories, Bioconductor, Bioconductor software, Bioconductor annotation.
-#' Bioconductor packages are installed using \code{\link{biocLite}}
+#' Bioconductor packages are installed using \code{\link{BiocManager}}
 #' 
 #' @return \code{TRUE} if the package was successfully loaded/found (installed), 
 #' \code{FALSE} otherwise.  
 #'  
-#' @import BiocInstaller
 #' @keywords internal
 uq_requirePackage <- function(package, lib=NULL, ..., load=TRUE, msg=NULL, quiet=TRUE, prependLF=FALSE
         , ptype=c('CRAN-like', 'BioC', 'BioCSoft', 'BioCann')){
@@ -443,13 +442,8 @@ uq_requirePackage <- function(package, lib=NULL, ..., load=TRUE, msg=NULL, quiet
     if( install_type == 'CRAN' ){
         pkginstall <- install.packages
     }else{ # Bioconductor 
-        if( !reqpkg('BiocInstaller') ){ # get biocLite from bioconductor.org
-            # use internal sourceURL to avoid issues with proxies
-            sourceURL("http://www.bioconductor.org/biocLite.R")
-        }
-        # use biocLite wrapper to disable (auto-)updates
         pkginstall <- function(pkgs, ...){
-            biocLite(pkgs, ..., suppressUpdates=TRUE, suppressAutoUpdate=TRUE)
+            BiocManager::install(pkgs, ...)
         }
     }
     message()

@@ -483,8 +483,8 @@ setGeneric('dims', package='Biobase')
 #' @rdname GEDdata-access
 #' @export
 setMethod('dims', 'GEDdata_entry', 
-        function(object){
-            object$dim
+        function(x){
+            x$dim
         })
 
 setGeneric('basis', package='NMF')
