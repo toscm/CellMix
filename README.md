@@ -11,7 +11,7 @@ The only changes made to the package were:
 
 ## Installation
 
-Run the command below from and interactive R session:
+Run the command below from an interactive R session:
 
 ```R
 if (!"devtools" %in% installed.packages()[, "Package"]) {
